@@ -35,9 +35,9 @@ def get_ip_icon(type):
 
 def get_speed_icon(speed):
   if speed < 10:
-    return "fa-wifi-slash"
+    return "fa-tractor"
   elif speed < 30:
-    return "fa-wifi-fair"
+    return "fa-bus-simple"
   elif speed < 70:
     return "fa-wifi"
   elif speed < 150:

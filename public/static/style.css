@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-
 html, body {
     height: 100%;
     margin: 0;
@@ -7,7 +5,7 @@ html, body {
     background-attachment: white;
     color: black;
     font-size: 24px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     word-wrap: break-word;
 }
 
