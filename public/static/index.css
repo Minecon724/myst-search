@@ -1,0 +1,64 @@
+h3 {
+    text-align: center;
+}
+
+.search {
+    width: 98%;
+    height: 7vh;
+    border-radius: 24px;
+    margin: 0 auto 15px;
+    font-size: 36px;
+    background-color: #eeeeee;
+}
+
+input[type=text] {
+    font-family: inherit;
+    padding: 5px 0 5px 10px;
+    width: 85%;
+    margin: 0;
+    float: left;
+    height: calc(7vh - 10px);
+    border: none;
+    outline: none;
+    background-color: #eeeeee;
+    font-size: 24px;
+    border-radius: 24px 0 0 24px;
+}
+
+input[type=text]:focus {
+    background-color: white;
+}
+
+input[type=submit] {
+    background-color: blue;
+    border: none;
+    outline: none;
+    font-size: 24px;
+    width: calc(15% - 10px);
+    color: white;
+    float: left;
+    height: 7vh;
+    border-radius: 0 24px 24px 0;
+}
+
+.node {
+    width: 98%;
+    height: 10vh;
+    border-radius: 24px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    margin: 10px auto;
+    padding: 15px 5px;
+    font-size: 32px;
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+
+.node > .elem {
+    margin: 0 0 0 5px;
+    height: 100%;
+    padding-left: 5px;
+    top: 50%;
+    border-left: 4px solid blue;
+    width: calc(25% - 14px);
+    float: left;
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Node search</title>
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="/style.css">
+        <link rel="stylesheet" href="/index.css">
+    </head>
+    <body>
+        <div class="full">
+            <div class="search">
+                <form>
+                    <input type="text" name="query" placeholder="{{ suggestion }}" value="{{ query }}">
+                    <input type="submit" value="Search">
+                </form>
+            </div>
+            {%for node in nodes%}
+                <div class="node" onclick="window.location.href='/info/{{ node.id|safe }}'">
+                    <div class="elem">
+                        {{ node.short }}
+                    </div>
+                    <div class="elem">
+                        {{ node.city }}, {{ node.country }}
+                    </div>
+                    <div class="elem">
+                        {{ node.type }}
+                    </div>
+                    <div class="elem">
+                        {{ node.speed }} Mbps                                                                     
+                    </div>
+                </div>
+            {%endfor%}
+            {%if empty%}
+                <h3>No results found :(</h3>
+            {%endif%}
+        </div>
+    </body>
+</html>

@@ -1,0 +1,21 @@
+.full {
+    display: flex;
+    justify-content: center;
+}
+
+.wrapper {
+    width: 50%;
+    height: 70%;
+    margin: auto;
+}
+
+@media screen and (max-width: 1000px) {
+    .wrapper {
+        width: 100%;
+    }
+}
+
+.inline {
+    display: inline;
+    white-space: nowrap;
+}
