@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from requests import get
 from random import choice
 from json import load
+from search import Search
 import string
 
 app = Flask(__name__, static_url_path='', static_folder='public/static', template_folder='public')
@@ -26,7 +27,7 @@ country_map = {}
 avail_countries = get("https://discovery.mysterium.network/api/v3/countries").json()
 for i in load(open('slim-2.json')):
   if i['alpha-2'] in avail_countries:
-    country_map[i['name'].lower().replace(' ', '')] = i['alpha-2']
+    country_map[i['alpha-2']] = i['name'].lower()
 
 def get_ip_icon(type):
   if not type in icons:
@@ -44,76 +45,39 @@ def get_speed_icon(speed):
     return "fa-ethernet"
   return "fa-bolt"
 
-def scan_types(query:str):
-  allowed = []
-  query = query.lower().replace(' ', '')
-  if "residential" in query:
-    allowed += ["residential", "business", "education", "celluar", "organization", "government", "college"]
-  if "hosting" in query or "datacenter" in query:
-    allowed += ["hosting", "content_delivery_network"]
-  if "school" in query or "college" in query or "education" in query:
-    allowed += ["education", "college"]
-  for i in types:
-    if not i in allowed:
-      if i in query:
-        allowed.append(i)
-  return allowed
-
-def scan_speed(query:str):
-  minimum = 0
-  query = query.lower().replace(' ', '')
-  if "fast" in query:
-    minimum = 100
-  if "gigabit" in query:
-    minimum = 1000
-  return minimum
-
-def scan_countries(query:str):
-  allowed = []
-  query = query.lower().replace(' ', '')
-  for i in country_map:
-    if i in query:
-      allowed.append(country_map[i])
-  return allowed
-
 @app.route('/')
 def home():
   query = request.args.get('query', default="", type=str)
   req = get(f"https://discovery.mysterium.network/api/v3/proposals").json()
-  types_allowed = types.copy()
-  speed_minimum = 0
-  countries = country_map.values()
-  if query != "":
-    types_allowed = scan_types(query)
-    if len(types_allowed) == 0: types_allowed = types.copy()
-    speed_minimum = scan_speed(query)
-    countries = scan_countries(query)
-    print(countries)
-    if len(countries) == 0: countries = country_map.values()
   if req is None: return "Something went wrong"
+  criteria = Search(country_map, iso_detect=True).process(query)
+  max_display = (max(min(criteria['show'], 100), 5) if criteria['show'] is not None else 20)
   nodes = []
   c = 0
   for i in req:
     loc = i['location']
     ip_type = loc['ip_type'] if 'ip_type' in loc else "unknown"
-    if not ip_type in types_allowed or i['quality']['bandwidth'] <= speed_minimum:
-      continue
-    if not ('country' in loc and loc['country'] in countries):
+    country = loc['country'] if 'country' in loc else "Unknown"
+    if criteria['types'] is not None:
+      if not ip_type in criteria['types']: continue
+    if criteria['countries'] is not None:
+      if not country in criteria['countries']: continue
+    if i['quality']['bandwidth'] <= criteria['speed']:
       continue
     nodes.append({
       'id': i['provider_id'],
       'short': i['provider_id'][:6] + '...',
       'type': ip_type.capitalize(),
       'city': loc['city'] if 'city' in loc else "Unknown",
-      'country': loc['country'] if 'country' in loc else "Unknown",
+      'country': country,
       'speed': round(i['quality']['bandwidth'], 2),
     })
     c += 1
-    if c > 100: break
+    if c > max_display: break
   suggestion = "Try searching for: "
   suggestion += choice(["fast", "gigabit"]) + " "
   suggestion += choice(["residential", "hosting", "organization", "government", "school", "college", "celluar"]) + " in "
-  suggestion += choice([i for i in country_map if len(i) < 10])
+  suggestion += choice([i for i in country_map.values() if len(i) < 10])
   return render_template("index.html", nodes=nodes, suggestion=suggestion, query=query, empty=(len(nodes) == 0))
 
 @app.route('/info/<id>')
