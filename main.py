@@ -3,9 +3,11 @@ from requests import get
 from random import choice
 from json import load
 from search import Search
+from flask_minify import Minify
 import string
 
 app = Flask(__name__, static_url_path='', static_folder='public/static', template_folder='public')
+Minify(app=app, html=True, js=True, cssless=True)
 
 icons = {
   "residential": "fa-house-chimney",
@@ -51,7 +53,7 @@ def home():
   req = get(f"https://discovery.mysterium.network/api/v3/proposals").json()
   if req is None: return "Something went wrong"
   criteria = Search(country_map, iso_detect=True).process(query)
-  max_display = (max(min(criteria['show'], 100), 5) if criteria['show'] is not None else 20)
+  max_display = (max(min(criteria['show'], 1000), 5) if criteria['show'] is not None else 20)
   nodes = []
   c = 0
   for i in req:
@@ -66,7 +68,7 @@ def home():
       continue
     nodes.append({
       'id': i['provider_id'],
-      'short': i['provider_id'][:6] + '...',
+      'short': i['provider_id'][:8] + '...',
       'type': ip_type.capitalize(),
       'city': loc['city'] if 'city' in loc else "Unknown",
       'country': country,
