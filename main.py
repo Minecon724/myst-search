@@ -90,7 +90,7 @@ def home():
   suggestion = "Try searching for: "
   suggestion += choice(["fast", "gigabit"]) + " "
   suggestion += choice(["residential", "hosting", "organization", "government", "school", "college", "celluar"]) + " in "
-  suggestion += choice([i for i in country_map.values() if len(i) < 10])
+  suggestion += choice([i for i in country_map.values() if len(i) < 12]).lower()
   return render_template("index.html", nodes=nodes, suggestion=suggestion, query=query, empty=(len(nodes) == 0))
 
 @app.route('/info/<id>')
@@ -109,8 +109,8 @@ def info(id):
     "country": country_map[loc['country']] if 'country' in loc else "Unknown",
     "country_code": loc['country'] if 'country' in loc else "??",
     "ip_icon": get_ip_icon(ip_type),
-    "quality": qua['quality'],
-    "bandwidth": qua['bandwidth'],
+    "quality": format(qua['quality'], '.2f'),
+    "bandwidth": format(qua['bandwidth'], '.2f'),
     "speed_icon": get_speed_icon(qua['bandwidth'])
   }
   return render_template("info.html", id=id, details=details)

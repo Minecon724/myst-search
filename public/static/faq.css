@@ -1,0 +1,25 @@
+.fs {
+    display: flex;
+    justify-content: center;
+}
+
+.content {
+    width: 80%;
+    height: 70%;
+    margin: auto;
+}
+
+@media screen and (max-width: 700px) {
+    .content {
+        width: 80px;
+    }
+}
+
+h3, p {
+    text-align: left;
+    margin-bottom: 11px;
+}
+
+p {
+    font-size: 20px;
+}
