@@ -5,13 +5,14 @@
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="/style.css">
         <link rel="stylesheet" href="/info.css">
-        <script src="https://kit.fontawesome.com/316984800b.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="/fontawesome/css/fontawesome.min.css">
+        <link rel="stylesheet" href="/fontawesome/css/solid.min.css">
     </head>
     <body>
         <div class="full">
             <div class="wrapper">
                 <h3>Node info</h3>
-                <p id="id">{{ id }}</p>
+                <p id="id" onclick="navigator.clipboard.writeText(this.innerText)">{{ id }}</p>
                 <br>
                 <i class="fa-solid {{ details.ip_icon|safe }} inline"></i>
                 <p class="inline">{{ details.type }} - {{ details.isp }}</p>

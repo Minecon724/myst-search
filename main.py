@@ -29,7 +29,7 @@ country_map = {}
 avail_countries = get("https://discovery.mysterium.network/api/v3/countries").json()
 for i in load(open('slim-2.json')):
   if i['alpha-2'] in avail_countries:
-    country_map[i['alpha-2']] = i['name'].lower()
+    country_map[i['alpha-2']] = i['name']#.lower()
 
 def get_ip_icon(type):
   if not type in icons:
@@ -47,33 +47,44 @@ def get_speed_icon(speed):
     return "fa-ethernet"
   return "fa-bolt"
 
+def simpleNode(data):
+  loc = data['location']
+  ip_type = loc['ip_type'] if 'ip_type' in loc else "unknown"
+  return {
+      'id': data['provider_id'],
+      'short': data['provider_id'][:8] + '...',
+      'type': ip_type.capitalize(),
+      'city': loc['city'] if 'city' in loc else "Unknown",
+      'country': loc['country'] if 'country' in loc else "Unknown",
+      'speed': round(data['quality']['bandwidth'], 2),
+    }
+
 @app.route('/')
 def home():
   query = request.args.get('query', default="", type=str)
-  req = get(f"https://discovery.mysterium.network/api/v3/proposals").json()
+  req = get("https://discovery.mysterium.network/api/v3/proposals").json()
   if req is None: return "Something went wrong"
   criteria = Search(country_map, iso_detect=True).process(query)
-  max_display = (max(min(criteria['show'], 1000), 5) if criteria['show'] is not None else 20)
+  max_display = (max(min(criteria['show'], 1000), 5) if criteria['show'] is not None else 20) - 1
   nodes = []
   c = 0
+  match = next((i for i in req if i['provider_id'] in query.strip()), None)
+  print(match)
+  if match: nodes.append(simpleNode(match))
   for i in req:
     loc = i['location']
     ip_type = loc['ip_type'] if 'ip_type' in loc else "unknown"
     country = loc['country'] if 'country' in loc else "Unknown"
+    asn = loc['asn'] if 'asn' in loc else "Unknown"
     if criteria['types'] is not None:
       if not ip_type in criteria['types']: continue
     if criteria['countries'] is not None:
       if not country in criteria['countries']: continue
+    if criteria['asn'] is not None:
+      if not asn in criteria['asn']: continue
     if i['quality']['bandwidth'] <= criteria['speed']:
       continue
-    nodes.append({
-      'id': i['provider_id'],
-      'short': i['provider_id'][:8] + '...',
-      'type': ip_type.capitalize(),
-      'city': loc['city'] if 'city' in loc else "Unknown",
-      'country': country,
-      'speed': round(i['quality']['bandwidth'], 2),
-    })
+    nodes.append(simpleNode(i))
     c += 1
     if c > max_display: break
   suggestion = "Try searching for: "
@@ -95,13 +106,20 @@ def info(id):
     "type": ip_type.capitalize(),
     "isp": loc['isp'] if 'isp' in loc else "Unknown",
     "city": loc['city'] if 'city' in loc else "Unknown",
-    "country": loc['country'] if 'country' in loc else "Unknown",
+    "country": country_map[loc['country']] if 'country' in loc else "Unknown",
+    "country_code": loc['country'] if 'country' in loc else "??",
     "ip_icon": get_ip_icon(ip_type),
     "quality": qua['quality'],
     "bandwidth": qua['bandwidth'],
     "speed_icon": get_speed_icon(qua['bandwidth'])
   }
   return render_template("info.html", id=id, details=details)
+
+@app.after_request
+def add_header(response):
+  response.cache_control.public = True
+  response.cache_control.max_age = 3600
+  return response
 
 if __name__ == "__main__":
   app.run()

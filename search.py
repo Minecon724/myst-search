@@ -54,9 +54,14 @@ class Search:
     countries = []
     types = []
     speed = 0
+    asn = []
     show = None
+    for i in query_list:
+      if i.lower().startswith('as'):
+        num = i[2:]
+        if num.isdigit(): asn.append(int(num))
     for i in self.country_map:
-      if self.country_map[i] in query + query_raw:
+      if self.country_map[i].lower() in query + query_raw:
         if not i in countries: countries.append(i)
       elif self.iso_detect and i in query_list:
         if not i in countries: countries.append(i)
@@ -80,6 +85,7 @@ class Search:
       "countries": (countries if len(countries) > 0 else None),
       "types": (types if len(types) > 0 else None),
       "speed": speed,
+      "asn": (asn if len(asn) > 0 else None),
       "show": show
     }
     return response 

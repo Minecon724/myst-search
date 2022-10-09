@@ -5,6 +5,9 @@
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="/style.css">
         <link rel="stylesheet" href="/index.css">
+        <link rel="preload" href="/info.css" as="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/quicklink@2.3.0/dist/quicklink.umd.js"></script>
+        <script>quicklink.listen();</script>
     </head>
     <body>
         <div class="full">
@@ -16,7 +19,8 @@
             </div>
             <p><a href="/faq.html">FAQ</a></p>
             {%for node in nodes%}
-                <div class="node" onclick="window.location.href='/info/{{ node.id|safe }}'">
+                <a href="/info/{{ node.id|safe }}" class="nodelink">
+                <div class="node">
                     <div class="elem">
                         {{ node.short }}
                     </div>
@@ -29,7 +33,7 @@
                     <div class="elem">
                         {{ node.speed }} Mbps                                                                     
                     </div>
-                </div>
+                </div></a>
             {%endfor%}
             {%if empty%}
                 <h3>No results found :(</h3>

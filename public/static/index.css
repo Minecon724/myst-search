@@ -2,6 +2,15 @@ h3, p {
     text-align: center;
 }
 
+.nodelink {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.nodelink:hover {
+    color: inherit;
+}
+
 .search {
     width: 90%;
     height: 60px;
@@ -42,11 +51,17 @@ input[type=submit] {
     height: 60px;
     border-radius: 0 24px 24px 0;
     cursor: pointer;
+    transition: 100ms ease-out;
+}
+
+input[type=submit]:hover {
+    background-color: transparent;
+    color: black;
 }
 
 .node {
     width: 95%;
-    height: 100px;
+    min-height: 40px;
     border-radius: 24px;
     margin: 15px auto;
     padding: 15px 5px;
@@ -55,6 +70,8 @@ input[type=submit] {
     cursor: pointer;
     transition: 0.1s ease-in-out;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .node:hover {
@@ -63,7 +80,6 @@ input[type=submit] {
 
 .node > .elem {
     margin: 0 0 0 5px;
-    height: 100%;
     padding-left: 5px;
     top: 50%;
     border-left: 4px solid blue;
@@ -72,11 +88,14 @@ input[type=submit] {
     overflow: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .node > .elem::-webkit-scrollbar {
     display: none;
 }
+
 
 
 @media screen and (max-width: 800px) {
@@ -86,9 +105,6 @@ input[type=submit] {
     input[type=text] {
         width: calc(100% - 10px);
         border-radius: 24px;
-    }
-    .node {
-        height: 200px;
     }
     .node > .elem {
       width: calc(50% - 14px);

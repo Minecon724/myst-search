@@ -1,0 +1,4 @@
+[submodule "public/static/fontawesome"]
+	path = public/static/fontawesome
+	url = https://github.com/FortAwesome/Font-Awesome
+	branch = 6.x
