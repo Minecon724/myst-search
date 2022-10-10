@@ -15,7 +15,7 @@
                 <p id="id" onclick="navigator.clipboard.writeText(this.innerText)">{{ id }}</p>
                 <br>
                 <i class="fa-solid {{ details.ip_icon|safe }} inline"></i>
-                <p class="inline">{{ details.type }} - {{ details.isp }}</p>
+                <p class="inline">{{ details.type }} - <span title="{{ details.asn }}">{{ details.isp }}</span></p>
                 <p>{{ details.city }}, {{ details.country }}</p>
                 <br>
                 <i class="fa-solid {{ details.speed_icon|safe }} inline"></i>

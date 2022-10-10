@@ -1,0 +1,1 @@
+function more() { window.location.href = window.location.href + (window.location.href.includes('query') ? "" : "?query=") + "show 100" }

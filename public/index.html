@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="/style.css">
         <link rel="stylesheet" href="/index.css">
         <link rel="preload" href="/info.css" as="stylesheet">
+        <script src="/script.js" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/quicklink@2.3.0/dist/quicklink.umd.js"></script>
         <script>quicklink.listen();</script>
     </head>
@@ -37,7 +38,9 @@
             {%endfor%}
             {%if empty%}
                 <h3>No results found :(</h3>
-            {%endif%}
+            {% else %}
+                <div id="more" onclick="more()">Show more</div>
+            {% endif %}
         </div>
     </body>
 </html>

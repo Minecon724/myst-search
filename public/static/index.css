@@ -96,7 +96,13 @@ input[type=submit]:hover {
     display: none;
 }
 
-
+#more {
+    height: 40px;
+    text-align: center;
+    margin: auto;
+    margin-top: 5px;
+    border-radius: 24px;
+}
 
 @media screen and (max-width: 800px) {
     input[type=submit] {

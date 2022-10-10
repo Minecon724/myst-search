@@ -108,6 +108,7 @@ def info(id):
     "city": loc['city'] if 'city' in loc else "Unknown",
     "country": country_map[loc['country']] if 'country' in loc else "Unknown",
     "country_code": loc['country'] if 'country' in loc else "??",
+    "asn": f"AS{loc['asn']}" if 'asn' in loc else "",
     "ip_icon": get_ip_icon(ip_type),
     "quality": format(qua['quality'], '.2f'),
     "bandwidth": format(qua['bandwidth'], '.2f'),
